@@ -1,5 +1,10 @@
 # Sales-recommendation-with-R
 
+- Description: I worked with a database composed of the main characteristics of a  set of cars, with the goal of choosing one that matches the  preferences of a fictitious client.
+- Skills/technology : R, exploratory data analysis, data visualization.
+
+--- 
+
 ### Carga de la base de datos
 ```
 rm(list =ls())
