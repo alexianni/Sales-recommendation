@@ -479,64 +479,78 @@ view(mtcars)
 </tbody>
 </table>
 
-### Parte 1: Limpieza de datos. En esta sección se eliminan aquellos autos que contienen características no deseadas para el cliente 
+## Parte 1: Limpieza de datos. En esta sección se eliminan aquellos autos que contienen características no deseadas para el cliente, así cómo también se realiza una revisión de características generales.
 
-#1) El auto con menor consumo
+### 1) El auto con menor consumo
 
 ```
 mtcars <- mtcars %>% mutate(kml = mtcars$mpg * (1.61/3.785))
 mtcars %>%  arrange(kml)
 ```
+- Toyota Carolla con 14,41 km/l
 
-
-#2) Auto menos pesado
+### 2) Auto menos pesado
 ```
 mtcars <- mtcars %>%  mutate(kg = mtcars$wt*1000/2.204)
 mtcars %>% arrange(kg)
 ```
+-  Lotus Europa con 686.47 kg
 
-#3) Autos con 6 o más cilindros 
+### 3) Filtrado. Se eliminan los autos que tienen más de 6 cilindros 
 ```
 mtcars <- mtcars %>% filter(cyl<=6)
 view(mtcars)
 ```
 
-#Parte 2: Análisis exploratorio de los datos
+## Parte 2: Análisis exploratorio de los datos
 
-#1)
+### 1) Cuantileles y mediana
 ```
 mtcars %>%  arrange(kml)
 median(mtcars$kml)
 quantile(mtcars$kml, seq(0,1,0.1))
 ```
-<span class="GEL-OVUBA3B ace_keyword">&gt; </span>
-<span class="GEL-OVUBJ2B">       0%       10%       20%       30%       40%       50%       60%       70%       80%       90%      100% 
- 7.571466  8.026605  8.600845  8.949643  9.102774  9.421797  9.834399 10.991387 12.403593 13.186262 14.419815 
-</span>
 
-#La mediana de consumo de gasolina es de 9.21
+| 0%       | 10%      | 20%      | 30%      | 40%      | 50%      | 60%       | 70%        | 80%       | 90%         | 100%      |
+|----------|----------|----------|----------|----------|----------|-----------|------------|-----------|-------------|-----------|
+| 7.571466 | 8.026605 | 8.600845 | 8.949643 | 9.102774 | 9.421797 | 9.834399  | 10.991387  | 12.403593 | 13.186262   | 14.419815 |
 
-#2) 
+
+- La mediana de consumo de gasolina es de 9.21
+
+###2)  Media de consumo, desagregado por tipo de transmisión 
 ```
 mtcars <- mtcars %>%  mutate(Tipo_transmision= if_else(am==1, "Manual", "Automática"))
 mtcars %>%  group_by(Tipo_transmision) %>%  summarize(mean(kml))
 ```
-#Los autos automaticos son mejores que los manuales (si se los compara en relación al consumo de gasolina)
 
-#3)
+| Tipo_transmision | Mean(klm) |
+|------------------|-----------|
+| Automática       | 8.82      |
+| Manual           | 11.1      |
+
+- Los autos automaticos son más eficientes que los manuales, si se los compara en función de su consumo de gasolina
+
+###3) Se crea una columna para identificar si la característica del consumo (alto/bajo) y otra para el peso del auto (alto/bajo)
 ```
 mtcars %>% arrange(kml)
 mtcars <- mtcars %>% mutate(mediana_kml=median(kml), mediana_kg=median(kg))
 mtcars <- mtcars %>%  mutate(consumo= if_else(mediana_kml>kml, "Alto", "Bajo"),peso= if_else(mediana_kg>kg, "Bajo", "Alto"))
+```
 
+``` 
 table(mtcars$consumo, mtcars$Tipo_transmision)
 ```
-#De los autos con transmisión automatica 2 son de consumo bajo y 5 de consumo alto
-#De los autos con transmisión manual 4 son de consumo alto y 7 de consumo bajo
 
-#Parte 3: Visualización de datos
+|      | Automática  | Manual |
+|------|-------------|--------|
+| Alto | 5           | 4      |
+| Bajo | 2           | 7      |
 
-#1)
+
+## Parte 3: Visualización de datos
+
+### 1)
 ```
 ggplot(mtcars, aes(x=Tipo_transmision, y=kml, fill=Tipo_transmision)) + geom_boxplot() +
   stat_summary(fun= mean, geom= "point") +
@@ -544,12 +558,17 @@ ggplot(mtcars, aes(x=Tipo_transmision, y=kml, fill=Tipo_transmision)) + geom_box
   xlab("Tipo de transmisión") + ylab("Consumo") +
   scale_fill_discrete(name= "Tipo de transmisión", labels = c("Automática", "Manual"))
 ```
-#2)
+### 2) Correlación entre el peso y el consumo
 ```
 cor(mtcars$kml, mtcars$kg, method = "pearson")
 ```
-#A medida que el peso disminuye el consumo se vuelve más eficiente (+Kilometros por litro).
-#Graficamente
+
+| [1] -0.8321413  |
+|-----------------|
+
+- A medida que el peso disminuye el consumo se vuelve más eficiente (+Kilometros por litro).
+
+- Graficamente
 ```
 ggplot(mtcars, aes(x=kml, y=kg)) + geom_point() +
   labs(title = "Relación entre consumo y peso", subtitle = "Mediante un diagrama de dispersión") +
