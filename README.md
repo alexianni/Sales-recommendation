@@ -518,7 +518,7 @@ quantile(mtcars$kml, seq(0,1,0.1))
 
 - La mediana de consumo de gasolina es de 9.21
 
-###2)  Media de consumo, desagregado por tipo de transmisión 
+### 2)  Media de consumo, desagregado por tipo de transmisión 
 ```
 mtcars <- mtcars %>%  mutate(Tipo_transmision= if_else(am==1, "Manual", "Automática"))
 mtcars %>%  group_by(Tipo_transmision) %>%  summarize(mean(kml))
@@ -531,7 +531,7 @@ mtcars %>%  group_by(Tipo_transmision) %>%  summarize(mean(kml))
 
 - Los autos automaticos son más eficientes que los manuales, si se los compara en función de su consumo de gasolina
 
-###3) Se crea una columna para identificar si la característica del consumo (alto/bajo) y otra para el peso del auto (alto/bajo)
+### 3) Se crea una columna para identificar si la característica del consumo (alto/bajo) y otra para el peso del auto (alto/bajo)
 ```
 mtcars %>% arrange(kml)
 mtcars <- mtcars %>% mutate(mediana_kml=median(kml), mediana_kg=median(kg))
@@ -558,6 +558,9 @@ ggplot(mtcars, aes(x=Tipo_transmision, y=kml, fill=Tipo_transmision)) + geom_box
   xlab("Tipo de transmisión") + ylab("Consumo") +
   scale_fill_discrete(name= "Tipo de transmisión", labels = c("Automática", "Manual"))
 ```
+	
+![image](https://github.com/alexianni/Sales-recommendation-with-R/blob/main/Estad%C3%ADstica%20descriptiva.png)
+
 ### 2) Correlación entre el peso y el consumo
 ```
 cor(mtcars$kml, mtcars$kg, method = "pearson")
@@ -574,4 +577,11 @@ ggplot(mtcars, aes(x=kml, y=kg)) + geom_point() +
   labs(title = "Relación entre consumo y peso", subtitle = "Mediante un diagrama de dispersión") +
   xlab("Consumo") + ylab("Peso") 
 ```
+	
+![image](https://github.com/alexianni/Sales-recommendation-with-R/blob/main/Diagrama%20de%20dispersi%C3%B3n.png)
 
+### Conclusiones:
+
+- Considerando los análisis hechos la recomendación de compra es que el cliente 
+adquiera un auto modelo Lotus Europa que tiene consumo y peso bajo, tiene cuatro 
+cilindros y es de transmisión manual
