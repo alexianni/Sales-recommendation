@@ -484,7 +484,9 @@ view(mtcars)
 </tbody>
 </table>
 
-## Parte 1: Limpieza de datos. En esta sección se eliminan aquellos autos que contienen características no deseadas para el cliente, así cómo también se realiza una revisión de características generales.
+## Parte 1: Limpieza de datos.
+
+- En esta sección se eliminan aquellos autos que contienen características no deseadas para el cliente, así cómo también se realiza una revisión de características generales.
 
 ### 1) El auto con menor consumo
 
